@@ -1,0 +1,38 @@
+.card__stretch
+    display: flex
+    background-color: var(--color-semi-black)
+    padding: 20px
+    border-radius: 5px
+    justify-content: space-around
+    &-item
+        margin: 5px 0
+    &-text
+        color: var(--color-gray-bold)
+    &-analysis
+        display: flex
+        span:nth-child(1)
+            display: flex
+            align-items: center
+            justify-content: center
+            font-weight: bold
+            font-size: var(--font-super)
+            *
+                margin-right: 10px
+
+.analysis
+    &-increase
+        color: var(--color-green)
+        font-weight: 500
+    &-decrease
+        color: var(--color-red)
+        font-weight: 500
+    &-icon-increase
+        color: rgb(7,162,77)
+        background-color: rgba(7,162,77,0.3 )
+        padding: 10px
+        border-radius: 10px
+    &-icon-decrease
+        color: rgb(230,62,70)
+        background-color: rgba(230,62,70,0.3 )
+        padding: 10px
+        border-radius: 10px

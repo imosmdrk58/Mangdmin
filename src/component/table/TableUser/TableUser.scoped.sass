@@ -1,0 +1,27 @@
+.row
+    &-thumb
+        width: 150px
+        height: 150px
+        border-radius: 100%
+        object-fit: cover
+        box-shadow: 0 0 5px 3px var(--color-semi-black)
+    &-action
+        display: flex
+        flex-direction: column
+        *
+            margin: 10px 0
+            font-size: var(--font-large)
+    &-information
+        &-item
+            margin: 10px 0
+            .label
+                display: inline-block
+                font-weight: bold
+                width: 100px
+                font-size: var(--font-large)
+            .content-array
+                color: var(--color-white)
+                span
+                    padding: 5px
+                    border-radius: 5px
+                    background-color: var(--color-semi-black)

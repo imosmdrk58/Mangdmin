@@ -1,0 +1,52 @@
+.sidebar
+    &__header
+        font-size: 20px
+        padding: 20px 20px 20px 20px
+        font-weight: bold
+    &__nav
+        list-style: none
+        padding: 0
+        margin: 0
+
+.nav-item
+    width: max-content
+    padding: 10px
+    font-size: var(--font-normal)
+    *
+        pointer-events: none
+    &-active
+        width: max-content
+        border-left: var(--color-red) solid 2px
+        margin-right: 10px
+        border-bottom-right-radius: 100px
+        border-top-right-radius: 100px
+        background-color: var(--color-gray-bold)
+    &-flex
+        display: flex
+        align-items: center
+    &-icon
+        background-color: rgba(white, 0.3)
+        height: 30px
+        width: 30px
+        display: flex
+        align-items: center
+        justify-content: center
+        margin-right: 10px
+        border-radius: 50%
+        color: var(--color-orange)
+    &-text
+        font-weight: bold
+        color: var(--text-blur)
+    &-child
+        li
+            padding: 10px
+            *
+                font-weight: 500
+                color: var(--text-blur)
+                transition: 0.3s linear
+    &-child-navigate:hover
+        color: white
+
+.nav-category
+    color: var(--text-blur)
+    font-weight: bold

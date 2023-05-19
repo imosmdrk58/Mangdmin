@@ -1,0 +1,86 @@
+.auth
+    position: fixed
+    left: 0
+    right: 0
+    bottom: 0
+    top: 0
+    background-color: var(--background-color)
+
+.authbox
+    width: max-content
+    padding: 50px
+    position: relative
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+    background-color: var(--color-viewed-notify)
+    border-radius: 10px
+    box-shadow: 0 0 10px 3px var(--color-gray-bold)
+    &__logo
+        position: absolute
+        top: 0
+        left: 50%
+        transform: translate(-50%, -50%)
+
+    &__title
+        text-transform: uppercase
+        animation: 2s linear rainbow infinite
+        font-weight: 600
+        padding-bottom: 2px
+        margin-bottom: 50px
+
+    &__body
+        div
+            display: flex
+            flex-direction: column
+            justify-content: center
+            label
+                font-size: var( --font-large)
+                font-weight: 500
+                padding: 5px 0
+                margin: 10px 0
+            input
+                outline: none
+                border: none
+                padding: 15px
+                min-width: 400px
+                border-radius: 5px
+            input:focus
+                box-shadow: 0 0 3px 1px var(--color-gray-bold)
+
+    &__action
+        width: 100%
+        .button
+            background-color: var(--color-blue)
+            color: var(--color-black)
+            margin: 20px 10px
+            float: right
+            transition: 0.1s linear
+        .button:hover
+            box-shadow: 0 0 10px 3px var(--color-gray-bold)
+
+    &__footer
+        width: 100%
+        display: flex
+        align-items: center
+        justify-content: space-between
+@keyframes rainbow
+    0%
+        color: var(--color-red)
+        border-bottom: 3px solid var(--color-red)
+    25%
+        color: var(--color-blue)
+        border-bottom: 3px solid var(--color-blue)
+    50%
+        color: var(--color-orange)
+        border-bottom: 3px solid var(--color-orange)
+    75%
+        color: var(--color-pink)
+        border-bottom: 3px solid var(--color-pink)
+    100%
+        color: var(--color-black)
+        border-bottom: 3px solid var(--color-black)

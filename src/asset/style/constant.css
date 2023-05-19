@@ -1,0 +1,34 @@
+:root {
+    --background-color: #161c24;
+    --text-light-color: #ffffff;
+    --text-dark-color: #000000;
+    --text-blur: #a3a3a3;
+    --line-gray: #8f97a4;
+
+    --font-normal: 14px;
+    --font-tiny: 12px;
+    --font-large: 16px;
+    --font-bigger-large: 20px;
+    --font-super: 25px;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-white-gray: #ebebeb;
+    --color-gray-bold: #807e7a;
+    --color-red: #fb0707;
+    --color-viewed-notify: #f2c3a3;
+    --color-orange: #ffa600;
+    --color-blue: #1a94ff;
+    --color-silver: #e4e4e4;
+    --color-pink: #ff0099;
+    --color-green: #25cd44;
+    --color-semi-black: #191c24;
+
+    --color-top-1: #ce070a;
+    --color-top-2: #25cd44;
+    --color-top-3: #ffac27;
+    --color-top-normal: #1a94ff;
+
+    --width-thumb-comicdetail: 200px;
+    --padding-right-comicdetail: 260px;
+}
