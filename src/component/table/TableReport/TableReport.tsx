@@ -12,7 +12,6 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -24,6 +23,8 @@ import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@mui/material';
 import { CustomInput } from '../../Search/Search';
 import { toast } from 'react-toastify';
+import { API_getReports, API_markSolved, API_searchComic } from '../../../service/CallAPI';
+import { toast_config } from '../../../config/toast.config';
 const _ = require('lodash');
 
 type Order = 'asc' | 'desc';
@@ -77,7 +78,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler =
     (property: any) => (event: React.MouseEvent<unknown>) => {
@@ -221,30 +222,16 @@ export class TableReport extends React.Component<any, any> {
       isSelected: (name: string) => this.state.selected.indexOf(name) !== -1,
     })
 
-    const query = `
-    query {
-      getReports(type: "all") {
-    id, fullname, email, detail_report, id_object, errors, link, type, is_resolve  }
-    }
-    `;
+    await API_getReports()
+      .then(async (response) => {
+        const json_response = await response.json();
 
-    const response = await fetch(`http://localhost:3000/graphql`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query
+        this.setState({
+          all_data: json_response.data.getReports,
+        }, () => {
+          this.setRows();
+        });
       })
-    })
-      .then(r => r.json())
-
-    this.setState({
-      all_data: response.data.getReports,
-    }, () => {
-      this.setRows();
-    })
   }
 
   setOrder(value: string) {
@@ -286,9 +273,7 @@ export class TableReport extends React.Component<any, any> {
   }
 
   searchComic = async (search_name: string) => {
-    await fetch(`http://localhost:3000/api/comic/search?comic_name=${search_name}&filter_state=&filter_author=&filter_genre=&filter_sort=az`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_searchComic({ search_name: search_name, }).then(async (response) => {
       const data = await response.json();
 
       this.setState({
@@ -358,6 +343,7 @@ export class TableReport extends React.Component<any, any> {
 
   markSolved = (id_report: number) => {
     this.setState({
+      // eslint-disable-next-line array-callback-return
       rows: this.state.rows.map((ele: any) => {
         if (ele.id === id_report) {
           ele.is_resolve = true;
@@ -366,16 +352,14 @@ export class TableReport extends React.Component<any, any> {
       }),
     });
 
-    fetch(`http://localhost:3000/api/report/update/${id_report}?is_resolve=${true}`, {
-      method: 'put',
-    })
-    .then(async(response) => {
-      const json_response = await response.json();
-      console.log(json_response);
-      if(json_response.success) {
-        alert(json_response.message);
-      }
-    })
+    API_markSolved(id_report, true)
+      .then(async (response) => {
+        const json_response = await response.json();
+
+        if (json_response.success) {
+          toast.success(json_response.message.toString(), toast_config);
+        }
+      })
   }
 
   render(): React.ReactNode {

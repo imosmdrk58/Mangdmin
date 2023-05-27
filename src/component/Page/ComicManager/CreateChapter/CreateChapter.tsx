@@ -7,6 +7,7 @@ import { faImage, faRemove } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { toast_config } from "../../../../config/toast.config";
 import { CheckLogin } from "../../../../util/Check-login";
+import { API_Graphql_getAllComic, API_createChapter } from "../../../../service/CallAPI";
 
 export class CreateChapter extends React.Component<any, any> {
   constructor(props: any) {
@@ -25,25 +26,7 @@ export class CreateChapter extends React.Component<any, any> {
   async componentDidMount() {
     CheckLogin();
     
-    const query = `
-    query {
-      getAllComic {
-           id,
-               name,
-        }
-    }
-    `;
-
-    await fetch(`http://localhost:3000/graphql`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query
-      })
-    })
+    await API_Graphql_getAllComic()
       .then(async (response) => {
         const json_response = await response.json();
 
@@ -94,25 +77,21 @@ export class CreateChapter extends React.Component<any, any> {
     }
 
     const form_data = new FormData();
-    form_data.append('files', this.state.chapter.files);
+    for(const i of this.state.chapter.files) {
+      form_data.append('files', i);
+    }
     form_data.append('name', this.state.chapter.name);
     form_data.append('id_comic', this.state.chapter.id_comic);
 
-    await fetch(`http://localhost:3000/api/comic/chapter/create`, {
-      method: 'post',
-      headers: {
-        'Authorization': `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFVzZXIiOjcsImlhdCI6MTY4NDExOTU2MiwiZXhwIjoxNjg0MTI2NzYyfQ.4sFVqDdtDVUFcqFRY_BQFTgSIL8sCaSthVNK7FVXdQI`,
-      },
-      body: form_data,
-    }).then(async(response) => {
+    await API_createChapter(form_data).then(async(response) => {
       const json_response = await response.json();
       if(json_response.success) {
         this.setState({
           images: [],
           chapter: {
+            ...this.state.chapter,
             name: '',
             files: [],
-            id_comic: this.props.id_comic ? this.props.id_comic : NaN,
           },
         });
         toast.success(json_response.message.toString(), toast_config);

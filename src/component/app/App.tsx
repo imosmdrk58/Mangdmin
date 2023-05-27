@@ -11,8 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ReportManager } from '../Page/ReportManager/ReportManager';
 import { CreateComic } from '../Page/ComicManager/CreateComic/CreateComic';
 import { CreateChapter } from '../Page/ComicManager/CreateChapter/CreateChapter';
-import { AuthRegister } from '../Page/Auth/register/Register';
 import { AuthLogin } from '../Page/Auth/Login/Login';
+import { UpdateComicChapter } from '../Page/ComicManager/UpdateComicChapter/UpdateComicChapter';
 
 export class App extends React.Component<any, any> {
   constructor(props: any) {
@@ -43,11 +43,11 @@ export class App extends React.Component<any, any> {
             <div id='app__container'>
               <Routes>
                 <Route path='/' element={<Dashboard />}></Route>
-                <Route path='/auth/register' element={<AuthRegister />}></Route>
                 <Route path='/auth/login' element={<AuthLogin />}></Route>
                 <Route path='/comic-management' element={<ComicManager />}></Route>
                 <Route path='/comic-management/create-comic' element={<CreateComic />}></Route>
                 <Route path='/comic-management/create-chapter' element={<CreateChapter />}></Route>
+                <Route path='/comic-management/update/:slug' element={<UpdateComicChapter />}></Route>
                 <Route path='/user-management' element={<UserManager />}></Route>
                 <Route path='/report-management' element={<ReportManager />}></Route>
               </Routes>

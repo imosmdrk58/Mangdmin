@@ -17,6 +17,7 @@ import {
 import { Bar, Line } from 'react-chartjs-2';
 import { SlideComic } from "../../Slide/SlideComic/SlideComic";
 import { CheckLogin } from "../../../util/Check-login";
+import { API_analysisNewUserOrComic, API_growPastCurrent, API_ranking, API_theMostInteractiveUser } from "../../../service/CallAPI";
 
 ChartJS.register(
   CategoryScale,
@@ -127,13 +128,8 @@ export class Dashboard extends React.Component<any, any> {
   async componentDidMount() {
     CheckLogin();
     
-    const reponse_new_user = await fetch(`http://localhost:3000/api/user/analysis/new-user?number_day=7`, {
-      method: 'get'
-    }).then(async (response) => response.json());
-
-    const response_new_comic = await fetch(`http://localhost:3000/api/comic/analysis/new-comic?number_day=7`, {
-      method: 'get'
-    }).then(async (response) => response.json());
+    const reponse_new_user = await API_analysisNewUserOrComic('user').then(async (response) => response.json());
+    const response_new_comic = await API_analysisNewUserOrComic('comic').then(async (response) => response.json());
 
     this.setState({
       chart_new_user: reponse_new_user.result,
@@ -144,29 +140,21 @@ export class Dashboard extends React.Component<any, any> {
       this.setDataNewChartNewUserComic();
     });
 
-
-
-    await fetch(`http://localhost:3000/api/comic/analysis/grow-past-current`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_growPastCurrent('comic').then(async (response) => {
       const data = await response.json();
       this.setState({
         stretchcard_new_comic: data.result,
       });
     })
 
-    await fetch(`http://localhost:3000/api/user/analysis/grow-past-current`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_growPastCurrent('user').then(async (response) => {
       const data = await response.json();
       this.setState({
         stretchcard_new_user: data.result,
       });
     })
 
-    await fetch(`http://localhost:3000/api/comic/ranking?field=view&limit=3`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_ranking('view', 3).then(async (response) => {
       const data = await response.json();
       this.setState({
         chart_top_3_view_comic: data.result,
@@ -175,9 +163,7 @@ export class Dashboard extends React.Component<any, any> {
       });
     })
 
-    await fetch(`http://localhost:3000/api/comment/analysis/the-most-interactive-user?limit=3`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_theMostInteractiveUser(3).then(async (response) => {
       const data = await response.json();
       this.setState({
         chart_top_3_interactive_user: data.result,

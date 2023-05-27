@@ -10,8 +10,7 @@ import { toast } from "react-toastify";
 import { toast_config } from "../../../../config/toast.config";
 import slugify from "slugify";
 import { CheckLogin } from "../../../../util/Check-login";
-
-const origin_url_be = 'http://localhost:3000';
+import { API_createComic, API_genres } from "../../../../service/CallAPI";
 
 const modules = {
   toolbar: [
@@ -50,9 +49,7 @@ export class CreateComic extends React.Component<any, any> {
   async componentDidMount() {
     CheckLogin();
 
-    await fetch(`${origin_url_be}/api/comic/genres`, {
-      method: 'get',
-    }).then(async (response) => {
+    await API_genres().then(async (response) => {
       const json_response = await response.json();
       this.setState({
         genres: json_response.result,
@@ -121,19 +118,13 @@ export class CreateComic extends React.Component<any, any> {
     form_data.append('another_name', this.state.comic.another_name);
     form_data.append('genres', this.state.comic.genres);
     form_data.append('authors', this.state.comic.authors.length !== 0 ? this.state.comic.authors.split(',') : 'Đang cập nhật');
-    form_data.append('brief_desc', this.state.comic.brief_desc === '' ? this.state.comic.brief_desc : 'Đang cập nhật');
+    form_data.append('brief_desc', this.state.comic.brief_desc !== '' ? this.state.comic.brief_desc : 'Đang cập nhật');
 
-    await fetch(`${origin_url_be}/api/comic/create`, {
-      method: 'post',
-      headers: {
-        'Authorization': `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZFVzZXIiOjcsImlhdCI6MTY4NDExOTU2MiwiZXhwIjoxNjg0MTI2NzYyfQ.4sFVqDdtDVUFcqFRY_BQFTgSIL8sCaSthVNK7FVXdQI`,
-      },
-      body: form_data,
-    }).then(async (response) => {
+    await API_createComic(form_data).then(async (response) => {
       const json_response = await response.json();
+
       if (json_response.success) {
         this.setState({
-          choosen_genres: [],
           comic: {
             name: '',
             another_name: '',
@@ -141,10 +132,11 @@ export class CreateComic extends React.Component<any, any> {
             authors: [],
             brief_desc: '',
             file: undefined,
-          }
+          },
+          image: '',
         }, () => {
           if (this.state.choosen_genres.length !== 0) {
-            for (const genre of this.state.choosen_genre) {
+            for (const genre of this.state.choosen_genres) {
               const genre_slug = slugify(genre, {
                 replacement: '-',
                 remove: undefined,
@@ -156,9 +148,13 @@ export class CreateComic extends React.Component<any, any> {
 
               if (document.getElementById(`${genre_slug}`)) {
                 const element_cb = document.getElementById(`${genre_slug}`) as HTMLInputElement;
-                element_cb.checked = true;
+                element_cb.checked = false;
               }
             }
+
+            this.setState({
+              choosen_genres: [],
+            });
           }
         });
         toast.success(json_response.message.toString(), toast_config);

@@ -12,7 +12,6 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -20,9 +19,10 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import './TableUser.scoped.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBan, faL, faLockOpen } from '@fortawesome/free-solid-svg-icons';
+import { faBan, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '@mui/material';
 import { toast } from 'react-toastify';
+import { API_banOrUnbanUser, API_getAllUsers } from '../../../service/CallAPI';
 const _ = require('lodash');
 
 type Order = 'asc' | 'desc';
@@ -66,7 +66,7 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+  const { order, orderBy, onRequestSort } =
     props;
   const createSortHandler =
     (property: any) => (event: React.MouseEvent<unknown>) => {
@@ -78,35 +78,35 @@ function EnhancedTableHead(props: EnhancedTableProps) {
       <TableRow>
         {headCells.map((headCell) => (
           <TableCell
-          key={headCell.id}
-          align='center'
-          padding={'normal'}
-          sortDirection={orderBy === headCell.id ? order : false}
-        >
-          {
-            headCell.sort ?
-              <TableSortLabel
-                active={orderBy === headCell.id}
-                direction={orderBy === headCell.id ? order : 'asc'}
-                onClick={createSortHandler(headCell.id)}
-              >
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                  </Box>
-                ) : null}
-              </TableSortLabel> :
-              <div>
-                {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                  </Box>
-                ) : null}
-              </div>
-          }
-        </TableCell>
+            key={headCell.id}
+            align='center'
+            padding={'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            {
+              headCell.sort ?
+                <TableSortLabel
+                  active={orderBy === headCell.id}
+                  direction={orderBy === headCell.id ? order : 'asc'}
+                  onClick={createSortHandler(headCell.id)}
+                >
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
+                </TableSortLabel> :
+                <div>
+                  {headCell.label}
+                  {orderBy === headCell.id ? (
+                    <Box component="span" sx={visuallyHidden}>
+                      {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                    </Box>
+                  ) : null}
+                </div>
+            }
+          </TableCell>
         ))}
       </TableRow>
     </TableHead>
@@ -150,7 +150,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           Danh sách user
         </Typography>
       )}
-      
+
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
@@ -197,36 +197,16 @@ export class EnhancedTable extends React.Component<any, any> {
       isSelected: (name: string) => this.state.selected.indexOf(name) !== -1,
     })
 
-    const query = `
-    query {
-      getAllUser {
-           id,
-        fullname,
-        avatar,
-        role,
-        email,
-        active,
-        }
-    }
-    `;
+    await API_getAllUsers()
+      .then(async (response) => {
+        const json_response = await response.json();
 
-    const response = await fetch(`http://localhost:3000/graphql`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query
+        this.setState({
+          all_data: json_response.data.getAllUser,
+        }, () => {
+          this.setRows();
+        });
       })
-    })
-      .then(r => r.json())
-
-    this.setState({
-      all_data: response.data.getAllUser,
-    }, () => {
-      this.setRows();
-    })
   }
 
   setOrder(value: string) {
@@ -329,7 +309,7 @@ export class EnhancedTable extends React.Component<any, any> {
     const agree = confirm(`Bạn có chắc muốn 'ban' người dùng với id ${id_user} này không?`);
 
     if (agree) {
-      fetch(`http://localhost:3000/api/user/management/2?ban=true`)
+      API_banOrUnbanUser(id_user, true)
         .then(async (response) => {
           const json_response = await response.json();
 
@@ -355,7 +335,7 @@ export class EnhancedTable extends React.Component<any, any> {
     const agree = confirm(`Bạn có chắc muốn 'unban' người dùng với id ${id_user} này không?`);
 
     if (agree) {
-      fetch(`http://localhost:3000/api/user/management/2?ban=false`)
+      API_banOrUnbanUser(id_user, false)
         .then(async (response) => {
           const json_response = await response.json();
 

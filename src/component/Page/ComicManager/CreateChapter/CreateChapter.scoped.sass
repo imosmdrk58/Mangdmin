@@ -2,9 +2,10 @@
     padding: 40px 0
     background-color: white
     min-height: 100vh
+    height: 100%
     display: flex
     align-items: center
-    justify-content: center
+    justify-content: top
     flex-direction: column
     &-item
         width: 60%
@@ -28,6 +29,7 @@
         border: 2px dashed black
         width: 100%
         object-fit: cover
+        transition: 0.1s linear
 .choose-image
     min-height: 200px
     height: 100%
@@ -40,6 +42,37 @@
     margin: 10px
     top: 0
     right: 0
+.expand-image
+    background-color: rgba(0, 0, 0, 0.5)
+    color: cyan
+    position: absolute
+    padding: 10px
+    border-radius: 10px
+    margin: 10px
+    bottom: 0
+    left: 0
+.change-image
+    background-color: rgba(0, 0, 0, 0.5)
+    color: cyan
+    position: absolute
+    padding: 10px
+    border-radius: 10px
+    margin: 10px
+    bottom: 0
+    right: 0
 .title-page
     color: black
     font-size: 50px
+
+#image-large
+    display: flex
+    align-items: center
+    justify-content: center
+    position: fixed
+    top: 0
+    bottom: 0
+    padding: 10px 50px
+    background-color: rgba(0, 0, 0, 0.3)
+    img
+        z-index: 1000
+        width: 500px

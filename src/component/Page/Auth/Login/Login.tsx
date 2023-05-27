@@ -82,19 +82,9 @@ export class AuthLogin extends React.Component<any, any> {
                         </div>
                     </div>
                     <div className="authbox__action">
-                        <button className="button" onClick={this.submitLogin}>
+                        <button className="button btn btn-primary" onClick={this.submitLogin}>
                             Đăng nhập
                         </button>
-                    </div>
-                    <div className="authbox__footer">
-                        <div>
-                            <span>Chưa có tài khoản </span>
-                            <Link to={'/auth/register'}>Đăng ký</Link>
-                        </div>
-                        <div>
-                            <span></span>
-                            <Link to={'/auth/forget-password'}>Quên mật khẩu</Link>
-                        </div>
                     </div>
                 </div>
                 <ToastContainer autoClose={1500} />

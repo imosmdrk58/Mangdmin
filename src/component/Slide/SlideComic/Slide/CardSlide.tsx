@@ -4,8 +4,7 @@ import './CardSlide.sass';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCamera, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-
-const origin_url_be = 'http://localhost:3000';
+import { API_changeSlideImage } from '../../../../service/CallAPI';
 
 export function CardSlide(props: any) {
     return (
@@ -19,7 +18,7 @@ export function CardSlide(props: any) {
 }
 
 export function CardSlideHome(props: any) {
-    const [origin_image, SetOriginImage] = useState(props.image.link_image);
+    const [origin_image] = useState(props.image.link_image);
     const [image, SetImage] = useState(props.image.link_image);
     const [file, SetFile] = useState(null);
     const [is_change, SetIsChange] = useState(false);
@@ -31,19 +30,13 @@ export function CardSlideHome(props: any) {
     }
 
     const confirmChange = () => {
-        if(file) {
+        if (file) {
             const form_data = new FormData();
-    
+
             form_data.append('file', file);
             form_data.append('index', props.image.id);
 
-            fetch(`${origin_url_be}/api/admin/change-slide`, {
-                method: 'put',
-                headers: {
-                    // 'Authorization': `bearer ${sessionStorage.getItem("access_token")}`,
-                },
-                body: form_data,
-            }).then((response) => {
+            API_changeSlideImage(form_data).then((response) => {
                 response.json().then((data) => {
                     console.log(data);
                 })

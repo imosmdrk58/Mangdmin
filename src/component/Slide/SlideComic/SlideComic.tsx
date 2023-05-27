@@ -9,8 +9,7 @@ import 'swiper/css/scrollbar';
 import './SlideComic.sass';
 import { CardSlideHome } from "./Slide/CardSlide";
 import { Container } from "@mui/material";
-
-const origin_url_be = 'http://localhost:3000';
+import { API_slideImages } from "../../../service/CallAPI";
 
 export class SlideComic extends React.Component<any, any> {
     constructor(props: any) {
@@ -21,24 +20,7 @@ export class SlideComic extends React.Component<any, any> {
     }
 
     async componentDidMount() {
-        const query = `
-        query {
-            getSlideImages {
-              id,
-              link_image
-            }
-          }`;
-
-        await fetch(`${origin_url_be}/graphql`, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query
-            })
-        }).then(async (response) => {
+        await API_slideImages().then(async (response) => {
             const json_response = await response.json();
 
             this.setState({

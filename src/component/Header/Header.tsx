@@ -4,8 +4,7 @@ import './Header.scoped.sass';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@mui/material";
-
-const origin_url_be = 'http://localhost:3000';
+import { API_logout } from "../../service/CallAPI";
 
 export class Header extends React.Component<any, any> {
   constructor(props: any) {
@@ -24,13 +23,7 @@ export class Header extends React.Component<any, any> {
   }
 
   logoutAdmin = () => {
-    fetch(`${origin_url_be}/api/auth/logout`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `bearer ${sessionStorage.getItem("access_token")}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    API_logout();
 
     sessionStorage.removeItem("access_token");
     sessionStorage.removeItem("refresh_token");

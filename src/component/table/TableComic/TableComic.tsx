@@ -25,6 +25,8 @@ import { Button } from '@mui/material';
 import { CustomInput } from '../../Search/Search';
 import DialogShowInformationComic from '../../Dialog/Information/DialogShowInformation';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import { API_Graphql_getAllComic, API_deleteComic, API_searchComic } from '../../../service/CallAPI';
 const _ = require('lodash');
 
 type Order = 'asc' | 'desc';
@@ -208,42 +210,17 @@ export class EnhancedTable extends React.Component<any, any> {
       isSelected: (name: string) => this.state.selected.indexOf(name) !== -1,
     })
 
-    const query = `
-    query {
-      getAllComic {
-           id,
-               name,
-               thumb,
-               like,
-               follow,
-               view,
-               state,
-               genres,
-               authors,
-               another_name,
-               brief_desc,
-               star,
-        }
-    }
-    `;
 
-    const response = await fetch(`http://localhost:3000/graphql`, {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify({
-        query
+    await API_Graphql_getAllComic()
+      .then(async (response) => {
+        const json_response = await response.json();
+
+        this.setState({
+          all_data: json_response.data.getAllComic,
+        }, () => {
+          this.setRows();
+        })
       })
-    })
-      .then(r => r.json())
-
-    this.setState({
-      all_data: response.data.getAllComic,
-    }, () => {
-      this.setRows();
-    })
   }
 
   setOrder(value: string) {
@@ -285,9 +262,7 @@ export class EnhancedTable extends React.Component<any, any> {
   }
 
   searchComic = async (search_name: string) => {
-    await fetch(`http://localhost:3000/api/comic/search?comic_name=${search_name}&filter_state=&filter_author=&filter_genre=&filter_sort=az`, {
-      method: 'get'
-    }).then(async (response) => {
+    await API_searchComic({search_name: search_name,}).then(async (response) => {
       const data = await response.json();
 
       this.setState({
@@ -367,9 +342,7 @@ export class EnhancedTable extends React.Component<any, any> {
     const agree = confirm(`Bạn thực sự muốn xóa truyện có id ${id_comic}?`)
 
     if (agree) {
-      await fetch(`http://localhost:3000/api/comic/delete/${id_comic}`, {
-        method: 'delete'
-      }).then(async (response) => {
+      await API_deleteComic(id_comic).then(async (response) => {
         const json_response = await response.json();
         console.log(json_response);
         if (json_response.success) {
@@ -377,42 +350,16 @@ export class EnhancedTable extends React.Component<any, any> {
         }
       })
 
-      const query = `
-      query {
-        getAllComic {
-             id,
-                 name,
-                 thumb,
-                 like,
-                 follow,
-                 view,
-                 state,
-                 genres,
-                 authors,
-                 another_name,
-                 brief_desc,
-                 star,
-          }
-      }
-      `;
+      await API_Graphql_getAllComic()
+        .then(async (response) => {
+          const json_response = await response.json();
 
-      const response = await fetch(`http://localhost:3000/graphql`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-          query
+          this.setState({
+            all_data: json_response.data.getAllComic,
+          }, () => {
+            this.setRows();
+          })
         })
-      })
-        .then(r => r.json())
-
-      this.setState({
-        all_data: response.data.getAllComic,
-      }, () => {
-        this.setRows();
-      })
     }
   }
 
@@ -501,9 +448,9 @@ export class EnhancedTable extends React.Component<any, any> {
                       </TableCell>
                       <TableCell align="center">
                         <div className='row-action'>
-                          <Button color="success" variant="contained">
+                          <Link to={'/comic-management/update/' + row.slug} className='btn-success' style={{ 'borderRadius': '5px', 'padding': '5px' }}>
                             <FontAwesomeIcon icon={faPenToSquare} />
-                          </Button>
+                          </Link>
                           <Button color="error" variant="contained" onClick={() => this.deleteComic(row.id)}>
                             <FontAwesomeIcon icon={faTrash} />
                           </Button>
