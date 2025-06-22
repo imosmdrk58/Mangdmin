@@ -70,20 +70,20 @@ export class AuthLogin extends React.Component<any, any> {
                     <Link to={'/'}>
                         <img className="authbox__logo" src={logo} alt="" />
                     </Link>
-                    <h1 className="authbox__title">Đăng nhập</h1>
+                    <h1 className="authbox__title">Giriş Yap</h1>
                     <div className="authbox__body">
                         <div>
-                            <label htmlFor="email">Email đăng nhập</label>
-                            <input id="email" name="email" type="email" placeholder="Nhập email" value={this.state.email} onChange={this.handleChangeInputEmail} />
+                            <label htmlFor="email">Giriş e-postası</label>
+                            <input id="email" name="email" type="email" placeholder="email" value={this.state.email} onChange={this.handleChangeInputEmail} />
                         </div>
                         <div>
-                            <label htmlFor="password">Mật khẩu</label>
-                            <input id="password" name="password" type="password" placeholder="Nhập mật khẩu ít nhất 8 ký tự" value={this.state.password} onChange={this.handleChangeInputPassword} />
+                            <label htmlFor="password">Şifre</label>
+                            <input id="password" name="password" type="password" placeholder=" En az 8 karakterden oluşan bir şifre girin" value={this.state.password} onChange={this.handleChangeInputPassword} />
                         </div>
                     </div>
                     <div className="authbox__action">
                         <button className="button btn btn-primary" onClick={this.submitLogin}>
-                            Đăng nhập
+                            Giriş Yap
                         </button>
                     </div>
                 </div>
